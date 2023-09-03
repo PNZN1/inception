@@ -24,7 +24,7 @@ prune: stop
 	sudo rm -rf /home/pniezen/data
 
 exec-mariadb:
-	docker exect -it mariadb bash
+	docker exec -it mariadb bash
 
 exec-wp:
 	docker exec -it wordpress bash
