@@ -1,0 +1,75 @@
+version: '${DOCKER_COMPOSE_VERSION:-3}' # if version not set, use 3
+
+services:
+  wordpress:
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    container_name: wordpress
+    build: requirements/wordpress
+    volumes:
+      - html:/var/www/html
+    restart: always
+    networks:
+      - inception
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - WP_ADMIN_NAME=${WP_ADMIN_NAME}
+      - WP_ADMIN_PASS=${WP_ADMIN_PASS}
+      - WP_USER_NAME=${WP_USER_NAME}
+      - WP_USER_PASS=${WP_USER_PASS}
+
+  mariadb:
+    container_name: mariadb
+    build: requirements/mariadb
+    volumes:
+      - db:/var/lib/mysql
+    restart: always
+    healthcheck:
+      test: [ "CMD", "test", "-e", "/health_check_file.test" ]
+      interval: 5s
+    networks:
+      - inception
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+
+  nginx:
+    depends_on:
+      - wordpress
+    container_name: nginx
+    build: requirements/nginx
+    volumes:
+      - html:/var/www/html
+    restart: always
+    ports:
+      - "443:443"
+    networks:
+      - inception
+    environment:
+      - COUNTRY_CODE=${COUNTRY_CODE:?COUNTRY_CODE is missing}
+      - STATE=${STATE:?STATE is missing}
+      - LOCALITY_NAME=${LOCALITY_NAME:?LOCALITY_NAME is missing}
+      - ORGANIZATION=${ORGANIZATION:?ORGANIZATION is missing}
+      - ORGANIZATION_UNIT=${ORGANIZATION_UNIT:?ORGANIZATION_UNIT is missing}
+      - COMMON_NAME=${COMMON_NAME:?COMMON_NAME is missing}
+
+volumes:
+  db:
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/pniezen/data/mariadb
+  html:
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/pniezen/data/wordpress
+
+networks:
+  inception:
