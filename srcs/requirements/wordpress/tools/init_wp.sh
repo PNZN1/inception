@@ -26,4 +26,5 @@ wp-cli.phar user create "$WP_USER_NAME" user@example.com \
                 --user_pass="$WP_USER_PASS" \
                 --allow-root
 
+# The '$@' is the CMD in the Dockerfile.
 exec "$@"

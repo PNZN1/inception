@@ -52,12 +52,12 @@ services:
     networks:
       - inception
     environment:
-      - COUNTRY_CODE=${COUNTRY_CODE:?COUNTRY_CODE is missing}
-      - STATE=${STATE:?STATE is missing}
-      - LOCALITY_NAME=${LOCALITY_NAME:?LOCALITY_NAME is missing}
-      - ORGANIZATION=${ORGANIZATION:?ORGANIZATION is missing}
-      - ORGANIZATION_UNIT=${ORGANIZATION_UNIT:?ORGANIZATION_UNIT is missing}
-      - COMMON_NAME=${COMMON_NAME:?COMMON_NAME is missing}
+      - COUNTRY_CODE=${COUNTRY_CODE}
+      - STATE=${STATE}
+      - LOCALITY_NAME=${LOCALITY_NAME}
+      - ORGANIZATION=${ORGANIZATION}
+      - ORGANIZATION_UNIT=${ORGANIZATION_UNIT}
+      - COMMON_NAME=${COMMON_NAME}
 
 volumes:
   db:
